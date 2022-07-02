@@ -4,6 +4,11 @@ model_status = "";
 
 alarm = "";
 
+function preload(){
+
+    alarm = loadSound("alarm.mp3");
+
+}
 
 function start() {
 
@@ -64,7 +69,10 @@ function draw() {
 
                 }
 
-            } else {
+            }
+             else {
+
+                document.getElementById("status").innerHTML = "Baby not found";
 
                 alarm.play();
 

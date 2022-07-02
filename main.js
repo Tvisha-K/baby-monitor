@@ -54,9 +54,6 @@ function draw() {
 
         for (i = 0; i < object.length; i++) {
 
-
-            document.getElementById("objects").innerHTML = "Number of objects detected : " + object.length;
-
             object_name = object[i].label;
 
             if (object_name == "person") {

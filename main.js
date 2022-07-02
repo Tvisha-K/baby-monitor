@@ -2,29 +2,32 @@ object = [];
 
 model_status = "";
 
-function start(){
+alarm = "";
 
-    cocossd = ml5.objectDetector("cocossd",modelLoaded);
+
+function start() {
+
+    cocossd = ml5.objectDetector("cocossd", modelLoaded);
 
     document.getElementById("status").innerHTML = "Status : Detecting objects"
 
 }
 
-function setup(){
+function setup() {
 
-    canvas = createCanvas(380,380);
+    canvas = createCanvas(380, 380);
 
     canvas.center();
 
     video = createCapture(VIDEO);
 
-    video.size(380,380);
+    video.size(380, 380);
 
     video.hide();
 
 }
 
-function modelLoaded(){
+function modelLoaded() {
 
     console.log("model has been loaded successfully");
 
@@ -32,67 +35,74 @@ function modelLoaded(){
 
 
 }
-  
 
-function draw(){
 
-    image(video,0,0,380,380);
-    
+function draw() {
 
-    if (model_status != ""){
+    image(video, 0, 0, 380, 380);
 
-        
-     cocossd.detect(video, gotResults);
 
-        for(i=0; i < object.length; i++){
+    if (model_status != "") {
 
-            document.getElementById("status").innerHTML = "Status : Object Detected";
-            
+
+        cocossd.detect(video, gotResults);
+
+        for (i = 0; i < object.length; i++) {
+
+
             document.getElementById("objects").innerHTML = "Number of objects detected : " + object.length;
 
             object_name = object[i].label;
 
-            object_percentage = floor(object[i].confidence*100);
+            if (object_name == "person") {
 
-            object_x = object[i].x;
+                document.getElementById("status").innerHTML = "Status : Baby found";
 
-            object_y = object[i].y;
+                if (alarm.isPlaying()) {
 
-            object_width = object[i].width;
+                    alarm.stop();
 
-            object_height = object[i].height;
+                }
 
-            r = floor(random(256));
+            } else {
 
-            g = floor(random(256));
+                alarm.play();
 
-            b = floor(random(256));
+                alarm.setVolume(1);
 
-            fill(r,g,b);
+                alarm.rate(2);
 
-            text(object_name + " " + object_percentage + "%" , object_x , object_y);
+            }
 
-            stroke(r,g,b);
+        }
 
-            noFill();
+        if (object.length <= 0) {
 
-            rect(object_x , object_y , object_width , object_height);
+            document.getElementById("status").innerHTML = "Baby not found";
+
+            alarm.play();
+
+            alarm.setVolume(1);
+
+            alarm.rate(2);
 
         }
 
     }
-   
+
 }
 
-function gotResults(e,r){
 
-    if (e){
 
-       console.error(e) 
 
-    }
 
-    else{
+function gotResults(e, r) {
+
+    if (e) {
+
+        console.error(e)
+
+    } else {
 
         console.log(r);
 
